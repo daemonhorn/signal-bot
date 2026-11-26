@@ -1,0 +1,14 @@
+# Secrets / local state — never commit
+config.toml
+signal-cli-config/
+state/
+.env
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+build/
+dist/

@@ -1,0 +1,23 @@
+# Template: setup.sh replaces @USER@, @GROUP@ and @DIR@ and installs it to
+# /etc/systemd/system/signal-bot.service.
+[Unit]
+Description=Signal to Claude Code bridge
+Wants=network-online.target
+After=network-online.target docker.service
+Wants=docker.service
+
+[Service]
+Type=simple
+User=@USER@
+Group=@GROUP@
+WorkingDirectory=@DIR@
+ExecStart=@DIR@/.venv/bin/signal-bot --config @DIR@/config.toml
+Restart=on-failure
+RestartSec=10
+Environment=PYTHONUNBUFFERED=1
+# Light hardening that does not get in Claude's way.
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

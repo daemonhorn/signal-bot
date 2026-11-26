@@ -1,0 +1,15 @@
+services:
+  signal-cli:
+    image: bbernhard/signal-cli-rest-api:${SIGNAL_CLI_TAG:-0.101}
+    container_name: signal-cli
+    restart: unless-stopped
+    environment:
+      MODE: json-rpc
+      # Run signal-cli as the host user so ./signal-cli-config stays owned by you.
+      SIGNAL_CLI_UID: ${SIGNAL_CLI_UID:-1000}
+      SIGNAL_CLI_GID: ${SIGNAL_CLI_GID:-1000}
+    ports:
+      # Localhost only: anyone who can reach this API can send as your account.
+      - "127.0.0.1:${SIGNAL_CLI_PORT:-8080}:8080"
+    volumes:
+      - ./signal-cli-config:/home/.local/share/signal-cli

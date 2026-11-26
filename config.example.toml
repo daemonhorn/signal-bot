@@ -1,0 +1,45 @@
+# signal-bot configuration. Copy to config.toml (mode 600); setup.sh writes it for you.
+
+[signal]
+# signal-cli REST API (the docker container). Keep it bound to localhost.
+api_url = "http://127.0.0.1:8080"
+# The bot's Signal account (E.164). In linked-device mode this is YOUR number.
+account = "+15551234567"
+
+[access]
+# Who may use the bot: E.164 numbers and/or Signal ACI UUIDs ("uuid:…").
+# UUIDs help when a sender hides their number (Signal phone-number privacy);
+# the UUID of an unknown sender is logged when they are ignored.
+allowed = ["+15557654321"]
+# Reply "not authorised" to non-whitelisted senders who use the trigger.
+# Default false: ignore them silently (they are still logged).
+reply_to_unknown = false
+
+[bot]
+# Messages must START with this (case-insensitive) or they are ignored.
+# e.g. "@claude what's the load average?"  /  "@claude /new"
+trigger = "@claude"
+# Where per-user session ids are stored (relative to this file).
+state_dir = "state"
+# Max Claude processes running at once across all users.
+max_concurrent = 2
+# Long replies are split into Signal messages of about this many characters.
+chunk_size = 1800
+
+[claude]
+# Absolute path recommended: systemd does not see your shell's PATH.
+binary = "/home/YOU/.local/bin/claude"
+# Claude's working directory. It can read (and with edit tools, change) files here.
+workdir = "/home/YOU/signal-bot-workspace"
+# Tools Claude may use without asking. Everything else is denied (permission_mode
+# "dontAsk"). Rule syntax is the same as Claude Code settings, e.g. "Bash(git status:*)".
+#   read-only : ["Read", "Glob", "Grep", "WebSearch", "WebFetch"]
+#   read+edit : add "Edit", "Write"
+allowed_tools = ["Read", "Glob", "Grep", "WebSearch", "WebFetch"]
+permission_mode = "dontAsk"   # "bypassPermissions" is refused by the bot
+model = ""                    # empty = Claude Code default
+timeout_seconds = 600
+max_budget_usd = 0            # 0 = no per-request cap
+append_system_prompt = "You are answering over Signal on a phone. Keep replies concise and use plain text, not Markdown tables."
+# Extra CLI args appended verbatim, e.g. ["--add-dir", "/srv/data"]
+extra_args = []
