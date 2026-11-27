@@ -1,5 +1,7 @@
 # Secrets / local state — never commit
 config.toml
+config.toml.bak
+*.bak
 signal-cli-config/
 state/
 .env
